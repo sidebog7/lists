@@ -38,3 +38,36 @@ impl List {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::List;
+    #[test]
+    fn basics() {
+        let mut list = List::new();
+
+        // Check empty list behaves
+        assert_eq!(list.pop(), None);
+
+        list.push(1);
+        list.push(2);
+        list.push(3);
+
+        // Check removal
+        assert_eq!(list.pop(), Some(3));
+        assert_eq!(list.pop(), Some(2));
+
+        // Push more to check for valid structure
+        list.push(4);
+        list.push(5);
+
+        // Check removal again
+        assert_eq!(list.pop(), Some(5));
+        assert_eq!(list.pop(), Some(4));
+
+        // Check exhaustion
+        assert_eq!(list.pop(), Some(1));
+        assert_eq!(list.pop(), None);
+        assert_eq!(list.pop(), None);
+    }
+}
