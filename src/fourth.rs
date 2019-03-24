@@ -1,4 +1,4 @@
-use std::cell::{Ref, RefCell};
+use std::cell::{Ref, RefCell, RefMut};
 use std::rc::Rc;
 
 pub struct List<T> {
@@ -103,6 +103,18 @@ impl<T> List<T> {
             .as_ref()
             .map(|node| Ref::map(node.borrow(), |node| &node.elem))
     }
+
+    pub fn peek_front_mut(&self) -> Option<RefMut<T>> {
+        self.head
+            .as_ref()
+            .map(|node| RefMut::map(node.borrow_mut(), |node| &mut node.elem))
+    }
+
+    pub fn peek_back_mut(&self) -> Option<RefMut<T>> {
+        self.tail
+            .as_ref()
+            .map(|node| RefMut::map(node.borrow_mut(), |node| &mut node.elem))
+    }
 }
 
 impl<T> Drop for List<T> {
@@ -168,6 +180,8 @@ mod test {
 
         assert!(list.peek_front().is_none());
         assert!(list.peek_back().is_none());
+        assert!(list.peek_front_mut().is_none());
+        assert!(list.peek_back_mut().is_none());
 
         list.push_front(1);
         list.push_front(2);
@@ -175,5 +189,7 @@ mod test {
 
         assert_eq!(&*list.peek_front().unwrap(), &3);
         assert_eq!(&*list.peek_back().unwrap(), &1);
+        assert_eq!(&*list.peek_front_mut().unwrap(), &mut 3);
+        assert_eq!(&*list.peek_back_mut().unwrap(), &mut 1);
     }
 }
