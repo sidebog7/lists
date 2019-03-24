@@ -97,6 +97,12 @@ impl<T> List<T> {
             .as_ref()
             .map(|node| Ref::map(node.borrow(), |node| &node.elem))
     }
+
+    pub fn peek_back(&self) -> Option<Ref<T>> {
+        self.tail
+            .as_ref()
+            .map(|node| Ref::map(node.borrow(), |node| &node.elem))
+    }
 }
 
 impl<T> Drop for List<T> {
@@ -161,11 +167,13 @@ mod test {
         let mut list = List::new();
 
         assert!(list.peek_front().is_none());
+        assert!(list.peek_back().is_none());
 
         list.push_front(1);
         list.push_front(2);
         list.push_front(3);
 
         assert_eq!(&*list.peek_front().unwrap(), &3);
+        assert_eq!(&*list.peek_back().unwrap(), &1);
     }
 }
